@@ -16,6 +16,9 @@
 (define (square x)
   (* x x))
 
+(define (inc x)
+  (+ x 1))
+
 (define (dec x)
   (- x 1))
 
@@ -39,3 +42,16 @@
   (cond [(= y 0) a]
         [(even? y) (fast-mult-iter a (double x) (halve y))]
         [else (fast-mult-iter (+ a x) x (dec y))]))
+
+(define (double- f)
+  (lambda (x) (f (f x))))
+
+(define (compose f g)
+  (lambda (x) (f (g x))))
+
+(define (repeated f n)
+  (define (repeated-iter l f n)
+    (if (= n 0)
+        l
+        (repeated-iter (compose f l) f (dec n))))
+  (repeated-iter identity f n))
