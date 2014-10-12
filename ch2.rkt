@@ -29,7 +29,12 @@
 (define (denom x) (cdr x))
 
 (define (print-rat x)
-  (newline)
   (display (numer x))
   (display "/")
-  (display (denom x)))
+  (display (denom x))
+  (newline))
+
+(define (gcd a b)
+  (if (= b 0)
+      a
+      (gcd b (remainder a b))))
