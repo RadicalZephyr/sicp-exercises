@@ -1,5 +1,9 @@
 #lang racket
 
+(provide fast-exp-it
+         fast-mult
+         fast-mult-it)
+
 (define (fast-exp-it b n)
   (fast-exp-iter 1 b n))
 
