@@ -22,7 +22,11 @@
   (= (* (numer x) (denom y))
      (* (numer y) (denom x))))
 
-(define (make-rat n d) (cons n d))
+(define (make-rat n d)
+  (let ([g (gcd (abs n) (abs d))])
+    (cond
+     [(negative? d) (cons (/ (- n) g) (/ (- d) g))]
+     [else          (cons (/ n g) (/ d g))])))
 
 (define (numer x) (car x))
 
@@ -38,3 +42,6 @@
   (if (= b 0)
       a
       (gcd b (remainder a b))))
+
+(define (mp n d)
+  (print-rat (make-rat n d)))
