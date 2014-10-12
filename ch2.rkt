@@ -26,3 +26,12 @@
 
 (define (halve x)
   (/ x 2))
+
+
+(define (fast-mult-it x y)
+  (fast-mult-iter 0 x y))
+
+(define (fast-mult-iter a x y )
+  (cond [(= y 0) a]
+        [(even? y) (fast-mult-iter a (double x) (halve y))]
+        [else (fast-mult-iter (+ a x) a (dec y))]))
