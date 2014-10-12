@@ -38,4 +38,4 @@
 (define (fast-mult-iter a x y )
   (cond [(= y 0) a]
         [(even? y) (fast-mult-iter a (double x) (halve y))]
-        [else (fast-mult-iter (+ a x) a (dec y))]))
+        [else (fast-mult-iter (+ a x) x (dec y))]))
