@@ -22,3 +22,36 @@
   (lambda (f)
     (lambda (x)
       (a ((b f) x)))))
+
+
+(add one two)
+->
+(add (lambda (f)
+       (lambda (x)
+         (f x)))
+     (lambda (f)
+       (lambda (x)
+         (f (f x)))))
+->
+(lambda (f)
+  (lambda (x)
+    ((lambda (f)
+       (lambda (x)
+         (f x)))
+     (((lambda (f)
+         (lambda (x)
+           (f (f x)))) f) x))))
+->
+(lambda (f)
+  (lambda (x)
+    ((lambda (f)
+       (lambda (x)
+         (f x)))
+     (f (f x)))))
+-> ;; Something is wrong... this isn't expanding properly
+(lambda (f)
+  (lambda (x)
+    (((lambda (f)
+        (lambda (x)
+          (f x)))
+      (f (f x))) x)))
