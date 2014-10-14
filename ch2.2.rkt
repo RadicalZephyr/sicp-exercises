@@ -90,3 +90,27 @@
 
 (define (square-listm items)
   (map square items))
+
+;; Ex. 2.22
+
+(define (square-listb items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons (square (car things))
+                    answer))))
+  (iter items nil))
+
+;; This doesn't work because in order to build a list, cons must take
+;; an item, and then a list.  But Louis is giving the arguments as
+;; (list item), thus making a reversed list.
+
+(define (square-listb2 items)
+  (define (iter things answer)
+    (if (null? things)
+        answer
+        (iter (cdr things)
+              (cons answer
+                    (square (car things))))))
+  (iter items nil))
