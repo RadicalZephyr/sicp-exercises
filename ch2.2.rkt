@@ -137,3 +137,12 @@
           [else                (rev-it (cons (car items) accum)
                                        (cdr items))]))
   (rev-it nil tree))
+
+
+;; Ex. 2.28
+
+(define (fringe tree)
+  (cond [(null? tree) '()]
+        [(not (pair? (car tree))) (cons (car tree) (fringe (cdr tree)))]
+        [else                     (append (fringe (car tree))
+                                          (fringe (cdr tree)))]))
