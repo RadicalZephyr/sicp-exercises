@@ -114,3 +114,10 @@
               (cons answer
                     (square (car things))))))
   (iter items nil))
+
+;; Ex. 2.23
+
+(define (for-each f items)
+  (cond [(null? items) true]
+        [else (f (car items))
+              (for-each f (cdr items))]))
