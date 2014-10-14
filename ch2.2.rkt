@@ -27,3 +27,12 @@
   (if (null? (cdr items))
       items
       (last-pair (cdr items))))
+
+;; Ex. 2.18
+
+(define (reverse items)
+  (define (rev-it accum items)
+    (if (null? items)
+        accum
+        (rev-it (cons (car items) accum) (cdr items))))
+  (rev-it '() items))
