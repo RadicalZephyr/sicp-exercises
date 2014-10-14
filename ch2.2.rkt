@@ -246,6 +246,8 @@
         (else (append (enumerate-tree (car tree))
                       (enumerate-tree (cdr tree))))))
 
+;; Ex. 2.33
+
 (define (map-a p sequence)
   (accumulate (lambda (x y)
                 (cons (p x)
@@ -257,6 +259,8 @@
 
 (define (length-a sequence)
   (accumulate (lambda (x y) (+ 1 y)) 0 sequence))
+
+;; Ex. 2.34
 
 (define (horner-eval x coefficient-sequence)
   (accumulate (lambda (this-coeff higher-terms)
