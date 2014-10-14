@@ -66,3 +66,27 @@
 ;; intuition was that the order should matter, but I guess because the
 ;; recursion proceeds to the point of using smallest coins only,
 ;; putting the smallest coins first doesn't make any difference.
+
+
+;; Mapping over lists
+(define nil '())
+
+(define (map proc items)
+  (if (null? items)
+      nil
+      (cons (proc (car items))
+            (map proc (cdr items)))))
+
+;; Ex. 2.21
+
+(define (square x)
+  (* x x))
+
+(define (square-list items)
+  (if (null? items)
+      nil
+      (cons (square (car items))
+            (square-list (cdr items)))))
+
+(define (square-listm items)
+  (map square items))
