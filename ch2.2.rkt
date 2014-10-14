@@ -193,3 +193,7 @@
                                                (left-branch mobile)))
                                    (balanced? (branch-structure
                                                (right-branch mobile))))]))
+
+;; If we change the constructor functions to use cons instead of list,
+;; I only need to change the definitions of right-branch and
+;; branch-structure
