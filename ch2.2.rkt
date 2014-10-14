@@ -124,3 +124,16 @@
 
 ;; (list 1 (list 2 (list 3 4)))
 ;; -> (1 (2 (3 4)))
+
+;; Ex. 2.27
+
+(define x (list (list 1 2) (list 3 4)))
+
+(define (deep-reverse tree)
+  (define (rev-it accum items)
+    (cond [(null? items)       accum]
+          [(pair? (car items)) (rev-it (cons (deep-reverse (car items)) accum)
+                                       (cdr items))]
+          [else                (rev-it (cons (car items) accum)
+                                       (cdr items))]))
+  (rev-it nil tree))
