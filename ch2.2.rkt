@@ -197,3 +197,10 @@
 ;; If we change the constructor functions to use cons instead of list,
 ;; I only need to change the definitions of right-branch and
 ;; branch-structure
+
+(define (scale-tree tree factor)
+  (map (lambda (sub-tree)
+         (if (pair? sub-tree)
+             (scale-tree sub-tree factor)
+             (* sub-tree factor)))
+       tree))
