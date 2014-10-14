@@ -146,3 +146,37 @@
         [(not (pair? (car tree))) (cons (car tree) (fringe (cdr tree)))]
         [else                     (append (fringe (car tree))
                                           (fringe (cdr tree)))]))
+
+
+;; Ex. 2.29
+
+(define (make-mobile left right)
+  (list left right))
+
+(define (make-branch length structure)
+  (list length structure))
+
+(define left-branch car)
+
+(define (right-branch mobile)
+  (car (cdr mobile)))
+
+(define branch-length car)
+
+(define (branch-structure branch)
+  (car (cdr branch)))
+
+(define m (make-mobile
+           (make-branch 10
+                        (make-mobile
+                         (make-branch 2 4)
+                         (make-branch 4 2)))
+           (make-branch 10 10)))
+
+(define (total-weight mobile)
+  (cond [(null? mobile)        0]
+        [(not (pair? mobile))  mobile]
+        [else                  (+ (total-weight (branch-structure
+                                                 (left-branch mobile)))
+                                  (total-weight (branch-structure
+                                                 (right-branch mobile))))]))
