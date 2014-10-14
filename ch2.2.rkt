@@ -282,6 +282,8 @@
 
 ;; from the text
 
+(define fold-right accumulate)
+
 (define (fold-left op initial sequence)
   (define (iter result rest)
     (if (null? rest)
@@ -289,3 +291,21 @@
         (iter (op result (car rest))
               (cdr rest))))
   (iter initial sequence))
+
+(define (reverse-r sequence)
+  (fold-right (lambda (x y)
+                (append y (list x)))
+              nil sequence))
+
+(define (reverse-l sequence)
+  (fold-left (lambda (x y)
+               (cons y x))
+             nil sequence))
+
+(define ll (list
+            (enumerate-interval 1 1000)
+            (enumerate-interval 1 10000)))
+
+(map (lambda (items) (time (void (reverse-l items)))) ll)
+
+(map (lambda (items) (time (void (reverse-r items)))) ll)
