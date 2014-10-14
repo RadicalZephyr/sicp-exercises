@@ -180,3 +180,16 @@
                                                  (left-branch mobile)))
                                   (total-weight (branch-structure
                                                  (right-branch mobile))))]))
+(define (balanced? mobile)
+  (define (torque branch)
+    (* (branch-length branch)
+       (total-weight (branch-structure branch))))
+
+  (cond [(null? mobile)       true]
+        [(not (pair? mobile)) true]
+        [else                 (and (= (torque (left-branch mobile))
+                                      (torque (right-branch mobile)))
+                                   (balanced? (branch-structure
+                                               (left-branch mobile)))
+                                   (balanced? (branch-structure
+                                               (right-branch mobile))))]))
