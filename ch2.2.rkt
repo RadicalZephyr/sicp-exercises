@@ -121,3 +121,6 @@
   (cond [(null? items) true]
         [else (f (car items))
               (for-each f (cdr items))]))
+
+;; (list 1 (list 2 (list 3 4)))
+;; -> (1 (2 (3 4)))
