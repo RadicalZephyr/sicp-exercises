@@ -193,7 +193,7 @@
 ;; operand would fail.
 
 (define (addend s) (car s))
-(define (augend s) (cadr s))
+(define (augend s) (car (cdr s)))
 
 (define (make-sum a1 a2)
   (cond ((=number? a1 0) a2)
@@ -202,7 +202,7 @@
         (else (list '+ a1 a2))))
 
 (define (multiplier p)   (car p))
-(define (multiplicand p) (cadr p))
+(define (multiplicand p) (car (cdr p)))
 
 (define (make-product m1 m2)
   (cond ((or (=number? m1 0) (=number? m2 0)) 0)
