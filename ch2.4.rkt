@@ -4,6 +4,10 @@
 
 (define set-car! set-mcar!)
 (define set-cdr! set-mcdr!)
+(define cons mcons)
+(define car mcar)
+(define cdr mcdr)
+(define list mlist)
 
 (define (square x) (* x x))
 
@@ -125,11 +129,16 @@
 
 (define (assoc key records)
   (cond ((null? records) false)
-        ((equal? key (caar records)) (car records))
+        ((equal? key (car (car records))) (car records))
 
         (else (assoc key (cdr records)))))
 
 (define (insert! key-1 key-2 value table)
+  (define cons mcons)
+  (define car mcar)
+  (define cdr mcdr)
+  (define list mlist)
+
   (let ((subtable (assoc key-1 (cdr table))))
     (if subtable
         (let ((record (assoc key-2 (cdr subtable))))
@@ -145,6 +154,7 @@
   'ok)
 
 (define (make-table)
+
   (let ((local-table (list '*table*)))
     (define (lookup key-1 key-2)
       (let ((subtable (assoc key-1 (cdr local-table))))
