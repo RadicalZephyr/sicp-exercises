@@ -11,43 +11,6 @@
 
 (define (square x) (* x x))
 
-;; Procedures from symbolic differentiation chapter
-
-(define (=number? exp num)
-  (and (number? exp) (= exp num)))
-
-(define (variable? x) (symbol? x))
-
-(define (same-variable? v1 v2)
-  (and (variable? v1) (variable? v2) (eq? v1 v2)))
-
-(define (sum? x)
-  (and (pair? x) (eq? (car x) '+)))
-
-(define (addend s) (cadr s))
-
-(define (augend s) (caddr s))
-
-(define (product? x)
-  (and (pair? x) (eq? (car x) '*)))
-
-(define (multiplier p) (cadr p))
-
-(define (multiplicand p) (caddr p))
-
-(define (make-sum a1 a2)
-  (cond ((=number? a1 0) a2)
-        ((=number? a2 0) a1)
-        ((and (number? a1) (number? a2)) (+ a1 a2))
-        (else (list '+ a1 a2))))
-
-(define (make-product m1 m2)
-  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
-        ((=number? m1 1) m2)
-        ((=number? m2 1) m1)
-        ((and (number? m1) (number? m2)) (* m1 m2))
-        (else (list '* m1 m2))))
-
 ;; Tag procedures
 
 (define (attach-tag type-tag contents)
@@ -113,17 +76,25 @@
        (lambda (r a) (tag (make-from-mag-ang r a))))
   'done)
 
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (error
+           "No method for these types -- APPLY-GENERIC"
+           (list op type-tags))))))
 
-(define (deriv ex var)
-  (cond [(number? exp) 0]
-        [(variable? exp) (if (same-variable? exp var)
-                             1 0)]
-        [else ((get 'deriv (operator exp)) (operands exp) var)]))
+(define (real-part z) (apply-generic 'real-part z))
+(define (imag-part z) (apply-generic 'imag-part z))
+(define (magnitude z) (apply-generic 'magnitude z))
+(define (angle z)     (apply-generic 'angle z))
 
-(define (operator exp) (car exp))
-(define (operands exp) (cdr exp))
+(define (make-from-real-imag x y)
+  ((get 'make-from-real-imag 'rectangular) x y))
+(define (make-from-mag-ang r a)
+  ((get 'make-from-mag-ang 'polar) r a))
 
-;; This program was changed to a data-directed style of programming
 
 ;; From ch3 lookahead to make the table actually work
 
@@ -187,3 +158,55 @@
 (define operation-table (make-table))
 (define get (operation-table 'lookup-proc))
 (define put (operation-table 'insert-proc!))
+
+
+
+;; Procedures from symbolic differentiation chapter
+
+(define (=number? exp num)
+  (and (number? exp) (= exp num)))
+
+(define (variable? x) (symbol? x))
+
+(define (same-variable? v1 v2)
+  (and (variable? v1) (variable? v2) (eq? v1 v2)))
+
+(define (sum? x)
+  (and (pair? x) (eq? (car x) '+)))
+
+(define (addend s) (cadr s))
+
+(define (augend s) (caddr s))
+
+(define (product? x)
+  (and (pair? x) (eq? (car x) '*)))
+
+(define (multiplier p) (cadr p))
+
+(define (multiplicand p) (caddr p))
+
+(define (make-sum a1 a2)
+  (cond ((=number? a1 0) a2)
+        ((=number? a2 0) a1)
+        ((and (number? a1) (number? a2)) (+ a1 a2))
+        (else (list '+ a1 a2))))
+
+(define (make-product m1 m2)
+  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+        ((=number? m1 1) m2)
+        ((=number? m2 1) m1)
+        ((and (number? m1) (number? m2)) (* m1 m2))
+        (else (list '* m1 m2))))
+
+(define (operator exp) (car exp))
+(define (operands exp) (cdr exp))
+
+
+(define (deriv ex var)
+  (cond [(number? exp) 0]
+        [(variable? exp) (if (same-variable? exp var)
+                             1 0)]
+        [else ((get 'deriv (operator exp)) (operands exp) var)]))
+
+
+;; This program was changed to a data-directed style of programming
