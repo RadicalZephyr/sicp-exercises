@@ -211,6 +211,15 @@
         ((and (number? m1) (number? m2)) (* m1 m2))
         (else (list '* m1 m2))))
 
+(define (base e) (car e))
+(define (exponent e) (car (cdr e)))
+
+(define (make-exponent b p)
+  (cond ((=number? p 0) 1)
+        ((and (number? b)
+              (number? p)) (expt b p))
+        (else (list '** b p))))
+
 (define (install-deriv-package)
   (define (deriv-sum exp var)
     (make-sum (deriv (addend exp) var)
@@ -222,6 +231,15 @@
                    (deriv (multiplicand exp) var))
      (make-product (deriv (multiplier exp)   var)
                    (multiplicand exp))))
+
+  (define (dec x) (- x 1))
+  (define (deriv-exponent exp var)
+    (make-product (exponent exp)
+                  (make-product (make-exponent (base exp)
+                                               (dec (exponent exp)))
+                                (deriv (base exp)))))
+
   (put 'deriv '+ deriv-sum)
   (put 'deriv '* deriv-product)
+  (put 'deriv '** deriv-exponent)
   'ok)
