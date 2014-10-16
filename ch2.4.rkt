@@ -220,18 +220,26 @@
               (number? p)) (expt b p))
         (else (list '** b p))))
 
-(define (install-deriv-package)
+(define (install-deriv-sum-package)
   (define (deriv-sum exp var)
     (make-sum (deriv (addend exp) var)
               (deriv (augend exp) var)))
 
-  (define (deriv-product exp var)
+  (put 'deriv '+ deriv-sum)
+  'ok)
+
+(define (install-deriv-product-package)
+    (define (deriv-product exp var)
     (make-sum
      (make-product (multiplier exp)
                    (deriv (multiplicand exp) var))
      (make-product (deriv (multiplier exp)   var)
                    (multiplicand exp))))
 
+  (put 'deriv '* deriv-product)
+  'ok)
+
+(define (install-deriv-exponent-package)
   (define (dec x) (- x 1))
   (define (deriv-exponent exp var)
     (make-product (exponent exp)
@@ -239,7 +247,9 @@
                                                (dec (exponent exp)))
                                 (deriv (base exp)))))
 
-  (put 'deriv '+ deriv-sum)
-  (put 'deriv '* deriv-product)
   (put 'deriv '** deriv-exponent)
   'ok)
+
+(install-deriv-sum-package)
+(install-deriv-product-package)
+(install-deriv-exponent-package)
