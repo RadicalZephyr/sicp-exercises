@@ -180,7 +180,6 @@
                              1 0)]
         [else ((get 'deriv (operator exp)) (operands exp) var)]))
 
-
 ;; a)
 ;; - This program was changed to a data-directed style of programming,
 ;; that uses the operation dispatch table described previously.
@@ -192,6 +191,8 @@
 ;; test for them explicitly otherwise the operations operator and
 ;; operand would fail.
 
+(define (make-exp op first next)
+  ((get 'make-exp op) first next))
 
 (define (install-deriv-sum-package)
   (define (addend s) (car s))
@@ -204,10 +205,11 @@
           (else (list '+ a1 a2))))
 
   (define (deriv-sum exp var)
-    (make-sum (deriv (addend exp) var)
+    (make-exp '+ (deriv (addend exp) var)
               (deriv (augend exp) var)))
 
   (put 'deriv '+ deriv-sum)
+  (put 'make-exp '+ make-sum)
   'ok)
 
 (define (install-deriv-product-package)
@@ -222,13 +224,14 @@
           (else (list '* m1 m2))))
 
   (define (deriv-product exp var)
-    (make-sum
-     (make-product (multiplier exp)
-                   (deriv (multiplicand exp) var))
-     (make-product (deriv (multiplier exp)   var)
-                   (multiplicand exp))))
+    (make-exp '+
+              (make-exp '* (multiplier exp)
+                        (deriv (multiplicand exp) var))
+              (make-exp '* (deriv (multiplier exp)   var)
+                        (multiplicand exp))))
 
   (put 'deriv '* deriv-product)
+  (put 'make-exp '* make-product)
   'ok)
 
 (define (install-deriv-exponent-package)
@@ -244,12 +247,13 @@
           (else (list '** b p))))
 
   (define (deriv-exponent exp var)
-    (make-product (exponent exp)
-                  (make-product (make-exponent (base exp)
-                                               (dec (exponent exp)))
-                                (deriv (base exp)))))
+    (make-exp '* (exponent exp)
+              (make-exp '* (make-exp '** (base exp)
+                                     (dec (exponent exp)))
+                        (deriv (base exp)))))
 
   (put 'deriv '** deriv-exponent)
+  (put 'make-exp '** make-exponent)
   'ok)
 
 (install-deriv-sum-package)
