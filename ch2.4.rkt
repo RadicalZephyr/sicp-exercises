@@ -192,35 +192,17 @@
 ;; test for them explicitly otherwise the operations operator and
 ;; operand would fail.
 
-(define (addend s) (car s))
-(define (augend s) (car (cdr s)))
-
-(define (make-sum a1 a2)
-  (cond ((=number? a1 0) a2)
-        ((=number? a2 0) a1)
-        ((and (number? a1) (number? a2)) (+ a1 a2))
-        (else (list '+ a1 a2))))
-
-(define (multiplier p)   (car p))
-(define (multiplicand p) (car (cdr p)))
-
-(define (make-product m1 m2)
-  (cond ((or (=number? m1 0) (=number? m2 0)) 0)
-        ((=number? m1 1) m2)
-        ((=number? m2 1) m1)
-        ((and (number? m1) (number? m2)) (* m1 m2))
-        (else (list '* m1 m2))))
-
-(define (base e) (car e))
-(define (exponent e) (car (cdr e)))
-
-(define (make-exponent b p)
-  (cond ((=number? p 0) 1)
-        ((and (number? b)
-              (number? p)) (expt b p))
-        (else (list '** b p))))
 
 (define (install-deriv-sum-package)
+  (define (addend s) (car s))
+  (define (augend s) (car (cdr s)))
+
+  (define (make-sum a1 a2)
+    (cond ((=number? a1 0) a2)
+          ((=number? a2 0) a1)
+          ((and (number? a1) (number? a2)) (+ a1 a2))
+          (else (list '+ a1 a2))))
+
   (define (deriv-sum exp var)
     (make-sum (deriv (addend exp) var)
               (deriv (augend exp) var)))
@@ -229,7 +211,17 @@
   'ok)
 
 (define (install-deriv-product-package)
-    (define (deriv-product exp var)
+  (define (multiplier p)   (car p))
+  (define (multiplicand p) (car (cdr p)))
+
+  (define (make-product m1 m2)
+    (cond ((or (=number? m1 0) (=number? m2 0)) 0)
+          ((=number? m1 1) m2)
+          ((=number? m2 1) m1)
+          ((and (number? m1) (number? m2)) (* m1 m2))
+          (else (list '* m1 m2))))
+
+  (define (deriv-product exp var)
     (make-sum
      (make-product (multiplier exp)
                    (deriv (multiplicand exp) var))
@@ -241,6 +233,16 @@
 
 (define (install-deriv-exponent-package)
   (define (dec x) (- x 1))
+
+  (define (base e) (car e))
+  (define (exponent e) (car (cdr e)))
+
+  (define (make-exponent b p)
+    (cond ((=number? p 0) 1)
+          ((and (number? b)
+                (number? p)) (expt b p))
+          (else (list '** b p))))
+
   (define (deriv-exponent exp var)
     (make-product (exponent exp)
                   (make-product (make-exponent (base exp)
